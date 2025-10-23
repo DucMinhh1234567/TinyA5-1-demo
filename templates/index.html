@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyA5/1 Encryption Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TinyA5/1 Stream Cipher Visualizer</h1>
+            <p>Educational tool for understanding the TinyA5/1 encryption algorithm</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Input Format Selection -->
+            <div class="format-selector">
+                <h3>Input Format</h3>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="input-format" value="binary" checked>
+                        Binary (e.g., "111")
+                    </label>
+                    <label>
+                        <input type="radio" name="input-format" value="char">
+                        Characters (A-H)
+                    </label>
+                </div>
+            </div>
+
+            <!-- Mode Selection -->
+            <div class="mode-selector">
+                <h3>Mode</h3>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="mode" value="immediate" checked>
+                        Immediate (show result only)
+                    </label>
+                    <label>
+                        <input type="radio" name="mode" value="visualize">
+                        Step-by-step visualization
+                    </label>
+                </div>
+            </div>
+
+            <!-- Encryption Section -->
+            <div class="section encrypt-section">
+                <h2>Encryption</h2>
+                <div class="input-group">
+                    <label for="encrypt-plaintext">Plaintext:</label>
+                    <input type="text" id="encrypt-plaintext" placeholder="Enter plaintext...">
+                    <div class="format-hint" id="encrypt-hint">Enter binary string (e.g., "111")</div>
+                </div>
+                <div class="input-group">
+                    <label for="encrypt-key">Key (23 bits):</label>
+                    <input type="text" id="encrypt-key" placeholder="Enter 23-bit key..." maxlength="23">
+                    <div class="format-hint">Must be exactly 23 bits (0s and 1s)</div>
+                </div>
+                <button id="encrypt-btn" class="btn btn-primary">Encrypt</button>
+                <div id="encrypt-result" class="result-area"></div>
+            </div>
+
+            <!-- Decryption Section -->
+            <div class="section decrypt-section">
+                <h2>Decryption</h2>
+                <div class="input-group">
+                    <label for="decrypt-ciphertext">Ciphertext:</label>
+                    <input type="text" id="decrypt-ciphertext" placeholder="Enter ciphertext...">
+                    <div class="format-hint" id="decrypt-hint">Enter binary string (e.g., "011")</div>
+                </div>
+                <div class="input-group">
+                    <label for="decrypt-key">Key (23 bits):</label>
+                    <input type="text" id="decrypt-key" placeholder="Enter 23-bit key..." maxlength="23">
+                    <div class="format-hint">Must be exactly 23 bits (0s and 1s)</div>
+                </div>
+                <button id="decrypt-btn" class="btn btn-primary">Decrypt</button>
+                <div id="decrypt-result" class="result-area"></div>
+            </div>
+
+            <!-- Visualization Section -->
+            <div class="section visualization-section" id="visualization-section" style="display: none;">
+                <h2>Step-by-Step Visualization</h2>
+                <div class="visualization-controls">
+                    <button id="prev-step" class="btn btn-secondary">Previous</button>
+                    <button id="play-pause" class="btn btn-secondary">Play</button>
+                    <button id="next-step" class="btn btn-secondary">Next</button>
+                    <span id="step-counter">Step 0 of 0</span>
+                </div>
+                
+                <div class="visualization-content">
+                    <div class="registers-container">
+                        <div class="register-group">
+                            <h4>Register X (6 bits)</h4>
+                            <div class="register" id="register-x">
+                                <div class="bit" data-bit="0">0</div>
+                                <div class="bit" data-bit="1">0</div>
+                                <div class="bit" data-bit="2">0</div>
+                                <div class="bit" data-bit="3">0</div>
+                                <div class="bit" data-bit="4">0</div>
+                                <div class="bit" data-bit="5">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="register-group">
+                            <h4>Register Y (8 bits)</h4>
+                            <div class="register" id="register-y">
+                                <div class="bit" data-bit="0">0</div>
+                                <div class="bit" data-bit="1">0</div>
+                                <div class="bit" data-bit="2">0</div>
+                                <div class="bit" data-bit="3">0</div>
+                                <div class="bit" data-bit="4">0</div>
+                                <div class="bit" data-bit="5">0</div>
+                                <div class="bit" data-bit="6">0</div>
+                                <div class="bit" data-bit="7">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="register-group">
+                            <h4>Register Z (9 bits)</h4>
+                            <div class="register" id="register-z">
+                                <div class="bit" data-bit="0">0</div>
+                                <div class="bit" data-bit="1">0</div>
+                                <div class="bit" data-bit="2">0</div>
+                                <div class="bit" data-bit="3">0</div>
+                                <div class="bit" data-bit="4">0</div>
+                                <div class="bit" data-bit="5">0</div>
+                                <div class="bit" data-bit="6">0</div>
+                                <div class="bit" data-bit="7">0</div>
+                                <div class="bit" data-bit="8">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-info">
+                        <div class="control-bits">
+                            <h4>Control Bits</h4>
+                            <div class="control-bit">
+                                <span>X[2]:</span>
+                                <span id="control-x2">0</span>
+                            </div>
+                            <div class="control-bit">
+                                <span>Y[7]:</span>
+                                <span id="control-y7">0</span>
+                            </div>
+                            <div class="control-bit">
+                                <span>Z[8]:</span>
+                                <span id="control-z8">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="majority-function">
+                            <h4>Majority Function</h4>
+                            <div id="majority-result">maj(0,0,0) = 0</div>
+                        </div>
+                        
+                        <div class="rotations">
+                            <h4>Register Rotations</h4>
+                            <div id="rotation-info">No rotations</div>
+                        </div>
+                        
+                        <div class="keystream">
+                            <h4>Keystream Generation</h4>
+                            <div id="keystream-info">s = X[5] ⊕ Y[7] ⊕ Z[8] = 0</div>
+                        </div>
+                        
+                        <div class="encryption">
+                            <h4>Encryption</h4>
+                            <div id="encryption-info">Data ⊕ Keystream = Result</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>TinyA5/1 Stream Cipher - Educational Visualization Tool</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
