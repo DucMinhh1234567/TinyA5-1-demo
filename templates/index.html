@@ -18,14 +18,14 @@
             <div class="format-selector">
                 <h3>Input Format</h3>
                 <div class="radio-group">
-                    <label>
-                        <input type="radio" name="input-format" value="binary" checked>
+                    <button type="button" class="option-btn active" data-option="binary" data-group="input-format">
                         Binary (e.g., "111")
-                    </label>
-                    <label>
-                        <input type="radio" name="input-format" value="char">
+                    </button>
+                    <button type="button" class="option-btn" data-option="char" data-group="input-format">
                         Characters (A-H)
-                    </label>
+                    </button>
+                    <input type="radio" name="input-format" value="binary" checked style="display: none;">
+                    <input type="radio" name="input-format" value="char" style="display: none;">
                 </div>
             </div>
 
@@ -33,14 +33,14 @@
             <div class="mode-selector">
                 <h3>Mode</h3>
                 <div class="radio-group">
-                    <label>
-                        <input type="radio" name="mode" value="immediate" checked>
+                    <button type="button" class="option-btn active" data-option="immediate" data-group="mode">
                         Immediate (show result only)
-                    </label>
-                    <label>
-                        <input type="radio" name="mode" value="visualize">
+                    </button>
+                    <button type="button" class="option-btn" data-option="visualize" data-group="mode">
                         Step-by-step visualization
-                    </label>
+                    </button>
+                    <input type="radio" name="mode" value="immediate" checked style="display: none;">
+                    <input type="radio" name="mode" value="visualize" style="display: none;">
                 </div>
             </div>
 

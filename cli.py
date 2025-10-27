@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 TinyA5/1 CLI Tool
 Command-line interface for TinyA5/1 encryption/decryption with immediate and verbose modes.

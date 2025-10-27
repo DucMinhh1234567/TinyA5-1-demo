@@ -15,12 +15,17 @@ class TinyA51Visualizer {
     }
 
     initializeEventListeners() {
-        // Format selection
+        // Option buttons (new button-style selection)
+        document.querySelectorAll('.option-btn').forEach(button => {
+            button.addEventListener('click', () => this.handleOptionButtonClick(button));
+        });
+
+        // Format selection (hidden radio buttons)
         document.querySelectorAll('input[name="input-format"]').forEach(radio => {
             radio.addEventListener('change', () => this.updateFormatHints());
         });
 
-        // Mode selection
+        // Mode selection (hidden radio buttons)
         document.querySelectorAll('input[name="mode"]').forEach(radio => {
             radio.addEventListener('change', () => this.updateMode());
         });
@@ -54,6 +59,26 @@ class TinyA51Visualizer {
                 this.validateKeyInput(e.target);
             });
         });
+    }
+
+    handleOptionButtonClick(clickedButton) {
+        const group = clickedButton.dataset.group;
+        const option = clickedButton.dataset.option;
+        
+        // Remove active class from all buttons in the same group
+        document.querySelectorAll(`.option-btn[data-group="${group}"]`).forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        clickedButton.classList.add('active');
+        
+        // Update hidden radio button
+        const radio = document.querySelector(`input[name="${group}"][value="${option}"]`);
+        if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event('change'));
+        }
     }
 
     updateFormatHints() {

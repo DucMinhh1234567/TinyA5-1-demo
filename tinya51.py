@@ -62,8 +62,11 @@ class TinyA51:
         self.Y[0] = t
     
     def rotate_Z(self):
-        """Rotate register Z: t = z3 ⊕ z8 ⊕ z9, then shift right and set z0 = t"""
-        t = self.Z[3] ^ self.Z[8] ^ self.Z[7]  # Note: z9 doesn't exist, using z7
+        """
+        Rotate register Z: t = z3 ⊕ z7 ⊕ z8, then shift right and set z0 = t
+        Note: Based on the ATBMTT document, the feedback taps are z3, z7, z8
+        """
+        t = self.Z[3] ^ self.Z[7] ^ self.Z[8]
         # Shift right: z8 = z7, z7 = z6, ..., z1 = z0
         for i in range(8, 0, -1):
             self.Z[i] = self.Z[i-1]

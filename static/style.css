@@ -58,26 +58,40 @@ header p {
 
 .radio-group {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
-.radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    padding: 10px 15px;
+.option-btn {
+    padding: 12px 20px;
+    border: 2px solid #dee2e6;
     border-radius: 8px;
-    transition: background-color 0.3s;
+    background-color: white;
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 150px;
 }
 
-.radio-group label:hover {
-    background-color: #e9ecef;
+.option-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.option-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #5a6fd8;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .radio-group input[type="radio"] {
-    margin: 0;
+    display: none;
 }
 
 .section {
@@ -222,7 +236,7 @@ header p {
 
 .register-group {
     background: white;
-    padding: 20px;
+    padding: 20px 20px 40px 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
@@ -238,6 +252,7 @@ header p {
     gap: 8px;
     justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
 .bit {
@@ -273,7 +288,7 @@ header p {
 .bit::after {
     content: attr(data-bit);
     position: absolute;
-    top: -25px;
+    bottom: -25px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.8rem;
