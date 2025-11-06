@@ -38,16 +38,18 @@ class TinyA51:
         self.Y = [int(bit) for bit in self.Y]
         self.Z = [int(bit) for bit in self.Z]
     
-    def majority(self, x2, y7, z8):
+    def majority(self, x1, y3, z3):
         """
-        Calculate majority function: maj(x2, y7, z8)
+        Calculate majority function: maj(x1, y3, z3)
         Returns 1 if 2 or more bits are 1, otherwise 0.
+        Note: Notation uses 1-indexed (x1, y3, z3) but we use 0-indexed arrays (x[1], y[3], z[3])
         """
-        return 1 if (x2 + y7 + z8) >= 2 else 0
+        return 1 if (x1 + y3 + z3) >= 2 else 0
     
     def rotate_X(self):
-        """Rotate register X: t = x3 ⊕ x4 ⊕ x5, then shift right and set x0 = t"""
-        t = self.X[3] ^ self.X[4] ^ self.X[5]
+        """Rotate register X: t = x2 ⊕ x4 ⊕ x5 (1-indexed: indices 2,4,5 in 0-indexed), then shift right and set x0 = t"""
+        # In 1-indexed: x2, x4, x5 = indices 2, 4, 5 in 0-indexed
+        t = self.X[2] ^ self.X[4] ^ self.X[5]
         # Shift right: x5 = x4, x4 = x3, ..., x1 = x0
         for i in range(5, 0, -1):
             self.X[i] = self.X[i-1]
@@ -63,10 +65,11 @@ class TinyA51:
     
     def rotate_Z(self):
         """
-        Rotate register Z: t = z3 ⊕ z7 ⊕ z8, then shift right and set z0 = t
-        Note: Based on the ATBMTT document, the feedback taps are z3, z7, z8
+        Rotate register Z: t = z2 ⊕ z7 ⊕ z8 (1-indexed: indices 2,7,8 in 0-indexed), then shift right and set z0 = t
+        Note: Based on the ATBMTT document, the feedback taps are z2, z7, z8
         """
-        t = self.Z[3] ^ self.Z[7] ^ self.Z[8]
+        # In 1-indexed: z2, z7, z8 = indices 2, 7, 8 in 0-indexed
+        t = self.Z[2] ^ self.Z[7] ^ self.Z[8]
         # Shift right: z8 = z7, z7 = z6, ..., z1 = z0
         for i in range(8, 0, -1):
             self.Z[i] = self.Z[i-1]
@@ -82,21 +85,22 @@ class TinyA51:
         Returns:
             int: Generated keystream bit
         """
-        # Get control bits
-        x2, y7, z8 = self.X[2], self.Y[7], self.Z[8]
+        # Get control bits (1-indexed: x1, y3, z3 = 0-indexed: x[1], y[3], z[3])
+        # Note: In the document, notation uses 1-indexed but we use 0-indexed arrays
+        x1, y3, z3 = self.X[1], self.Y[3], self.Z[3]
         
         # Calculate majority
-        m = self.majority(x2, y7, z8)
+        m = self.majority(x1, y3, z3)
         
         # Determine which registers to rotate
-        rotate_X = (x2 == m)
-        rotate_Y = (y7 == m)
-        rotate_Z = (z8 == m)
+        rotate_X = (x1 == m)
+        rotate_Y = (y3 == m)
+        rotate_Z = (z3 == m)
         
         # Store step information if requested
         if step_info is not None:
             step_info.update({
-                'x2': x2, 'y7': y7, 'z8': z8,
+                'x1': x1, 'y3': y3, 'z3': z3,
                 'majority': m,
                 'rotate_X': rotate_X,
                 'rotate_Y': rotate_Y,
@@ -114,7 +118,8 @@ class TinyA51:
         if rotate_Z:
             self.rotate_Z()
         
-        # Generate keystream bit: s = x5 ⊕ y7 ⊕ z8
+        # Generate keystream bit AFTER rotation: s = x5 ⊕ y7 ⊕ z8 (1-indexed) = x[5] ⊕ y[7] ⊕ z[8] (0-indexed)
+        # These are the last bits of each register after rotation
         s = self.X[5] ^ self.Y[7] ^ self.Z[8]
         
         # Store final state if requested
@@ -143,6 +148,16 @@ class TinyA51:
             raise ValueError("Data must contain only 0s and 1s")
         
         self.reset()
+        
+        # Capture initial state for verbose mode
+        initial_state = None
+        if verbose:
+            initial_state = {
+                'X': self.X.copy(),
+                'Y': self.Y.copy(),
+                'Z': self.Z.copy()
+            }
+        
         result = []
         steps = []
         
@@ -168,6 +183,7 @@ class TinyA51:
         
         if verbose:
             result_dict['steps'] = steps
+            result_dict['initial_state'] = initial_state
         
         return result_dict
     
@@ -272,7 +288,7 @@ if __name__ == "__main__":
     
     for step in result['steps']:
         print(f"\nStep {step['step']}:")
-        print(f"  Control bits: x2={step['x2']}, y7={step['y7']}, z8={step['z8']}")
+        print(f"  Control bits: x1={step['x1']}, y3={step['y3']}, z3={step['z3']}")
         print(f"  Majority: {step['majority']}")
         print(f"  Rotate: X={step['rotate_X']}, Y={step['rotate_Y']}, Z={step['rotate_Z']}")
         print(f"  X: {step['X_before']} -> {step['X_after']}")

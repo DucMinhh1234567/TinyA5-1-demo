@@ -1,108 +1,108 @@
 # TinyA5/1 Stream Cipher Visualizer
 
-A comprehensive educational tool for understanding the TinyA5/1 stream cipher algorithm, featuring both a web-based visualizer and a command-line interface.
+Bài tập nhóm môn An toàn bảo mật thông tin
 
-## Features
+## Tính Năng
 
-- **Web Interface**: Interactive visualization with step-by-step register operations
-- **CLI Tool**: Terminal-based encryption/decryption with verbose mode
-- **Dual Input Support**: Binary strings or character input (A-H)
-- **Real-time Visualization**: Watch registers rotate and keystream generation
-- **Educational Focus**: Clear display of algorithm internals
+- **Giao Diện Web**: Hiển thị tương tác với các thao tác thanh ghi từng bước
+- **Công Cụ CLI**: Mã hóa/giải mã dựa trên terminal với chế độ chi tiết
+- **Hỗ Trợ Đầu Vào Kép**: Chuỗi nhị phân hoặc đầu vào ký tự (A-H)
+- **Hiển Thị Thời Gian Thực**: Xem các thanh ghi xoay và tạo keystream
+- **Tập Trung Giáo Dục**: Hiển thị rõ ràng các thành phần bên trong của thuật toán
 
-## Installation
+## Cài Đặt
 
-### Prerequisites
+### Yêu Cầu
 
-- Python 3.7 or higher
-- pip (Python package manager)
+- Python 3.7 trở lên
+- pip (trình quản lý gói Python)
 
-### Setup
+### Thiết Lập
 
-1. **Clone or download the project files**
+1. **Clone hoặc tải xuống các tệp dự án**
 
-2. **Install dependencies**:
+2. **Cài đặt các phụ thuộc**:
    ```bash
    pip install flask flask-cors
    ```
 
-3. **Run the web application**:
+3. **Chạy ứng dụng web**:
    ```bash
    python app.py
    ```
 
-4. **Open your browser** and navigate to `http://localhost:5000`
+4. **Mở trình duyệt** và truy cập `http://localhost:5000`
 
-## Usage
+## Cách Sử Dụng
 
-### Web Interface
+### Giao Diện Web
 
-1. **Choose Input Format**:
-   - **Binary**: Enter binary strings (e.g., "111")
-   - **Characters**: Enter letters A-H (e.g., "H")
+1. **Chọn Định Dạng Đầu Vào**:
+   - **Nhị phân**: Nhập chuỗi nhị phân (ví dụ: "111")
+   - **Ký tự**: Nhập chữ cái A-H (ví dụ: "H")
 
-2. **Select Mode**:
-   - **Immediate**: Get instant encryption/decryption results
-   - **Step-by-step visualization**: Watch the algorithm execute step by step
+2. **Chọn Chế Độ**:
+   - **Tức thì**: Nhận kết quả mã hóa/giải mã ngay lập tức
+   - **Hiển thị từng bước**: Xem thuật toán thực thi từng bước
 
-3. **Enter Data**:
-   - **Plaintext/Ciphertext**: Your data to encrypt/decrypt
-   - **Key**: Exactly 23 bits (e.g., "10010101001110100110000")
+3. **Nhập Dữ Liệu**:
+   - **Plaintext/Ciphertext**: Dữ liệu của bạn để mã hóa/giải mã
+   - **Khóa**: Chính xác 23 bit (ví dụ: "10010101001110100110000")
 
-4. **Visualization Controls** (in step-by-step mode):
-   - **Previous/Next**: Navigate through steps manually
-   - **Play/Pause**: Auto-play through all steps
-   - **Register Display**: See X (6 bits), Y (8 bits), Z (9 bits) registers
-   - **Control Bits**: Highlighted x2, y7, z8 positions
-   - **Majority Function**: Shows maj(x2, y7, z8) calculation
-   - **Rotations**: Visual indication of which registers rotate
-   - **Keystream**: Shows s = x5 ⊕ y7 ⊕ z8 calculation
-   - **Encryption**: Shows data ⊕ keystream = result
+4. **Điều Khiển Hiển Thị** (ở chế độ từng bước):
+   - **Trước/Tiếp**: Điều hướng qua các bước thủ công
+   - **Phát/Tạm dừng**: Tự động phát qua tất cả các bước
+   - **Hiển Thị Thanh Ghi**: Xem các thanh ghi X (6 bit), Y (8 bit), Z (9 bit)
+   - **Bit Điều Khiển**: Các vị trí x2, y7, z8 được tô sáng
+   - **Hàm Đa Số**: Hiển thị phép tính maj(x2, y7, z8)
+   - **Xoay**: Chỉ báo trực quan về các thanh ghi nào đang xoay
+   - **Keystream**: Hiển thị phép tính s = x5 ⊕ y7 ⊕ z8
+   - **Mã Hóa**: Hiển thị dữ liệu ⊕ keystream = kết quả
 
-### Command Line Interface
+### Giao Diện Dòng Lệnh
 
-#### Interactive Mode
+#### Chế Độ Tương Tác
 ```bash
 python cli.py --interactive
 ```
 
-#### Direct Commands
+#### Lệnh Trực Tiếp
 
-**Encrypt binary data**:
+**Mã hóa dữ liệu nhị phân**:
 ```bash
 python cli.py --encrypt --data "111" --key "10010101001110100110000"
 ```
 
-**Decrypt binary data**:
+**Giải mã dữ liệu nhị phân**:
 ```bash
 python cli.py --decrypt --data "011" --key "10010101001110100110000"
 ```
 
-**Encrypt character data**:
+**Mã hóa dữ liệu ký tự**:
 ```bash
 python cli.py --encrypt --data "H" --key "10010101001110100110000" --char
 ```
 
-**Verbose mode (show step-by-step)**:
+**Chế độ chi tiết (hiển thị từng bước)**:
 ```bash
 python cli.py --encrypt --data "111" --key "10010101001110100110000" --verbose
 ```
 
-## Algorithm Details
+## Chi Tiết Thuật Toán
 
-### TinyA5/1 Overview
+### Tổng Quan TinyA5/1
 
-TinyA5/1 is a simplified version of the A5/1 stream cipher used in GSM mobile phones. It features:
+TinyA5/1 là phiên bản đơn giản hóa của stream cipher A5/1 được sử dụng trong điện thoại di động GSM. Nó có các tính năng:
 
-- **3 Registers**: X (6 bits), Y (8 bits), Z (9 bits)
-- **23-bit Key**: Split across the three registers
-- **Majority Function**: Determines which registers rotate
-- **XOR Feedback**: Registers rotate with XOR feedback
-- **Keystream**: Generated by XORing specific register bits
+- **3 Thanh Ghi**: X (6 bit), Y (8 bit), Z (9 bit)
+- **Khóa 23-bit**: Chia nhỏ qua ba thanh ghi
+- **Hàm Đa Số**: Xác định thanh ghi nào xoay
+- **Phản Hồi XOR**: Các thanh ghi xoay với phản hồi XOR
+- **Keystream**: Được tạo bằng cách XOR các bit thanh ghi cụ thể
 
-### Character Encoding
+### Mã Hóa Ký Tự
 
-The system supports character input using this mapping:
+Hệ thống hỗ trợ đầu vào ký tự sử dụng mapping:
 - A → 000
 - B → 001
 - C → 010
@@ -112,106 +112,106 @@ The system supports character input using this mapping:
 - G → 110
 - H → 111
 
-### Algorithm Steps
+### Các Bước Thuật Toán
 
-1. **Initialize**: Load 23-bit key into registers X, Y, Z
-2. **For each bit**:
-   - Read control bits: x2, y7, z8
-   - Calculate majority: maj(x2, y7, z8)
-   - Rotate registers where control bit equals majority
-   - Generate keystream bit: s = x5 ⊕ y7 ⊕ z8
-   - XOR with data bit: cipher_bit = data_bit ⊕ s
+1. **Khởi tạo**: Tải khóa 23-bit vào các thanh ghi X, Y, Z
+2. **Cho mỗi bit**:
+   - Đọc các bit điều khiển: x2, y7, z8
+   - Tính đa số: maj(x2, y7, z8)
+   - Xoay các thanh ghi nơi bit điều khiển bằng đa số
+   - Tạo bit keystream: s = x5 ⊕ y7 ⊕ z8
+   - XOR với bit dữ liệu: cipher_bit = data_bit ⊕ s
 
-## Examples
+## Ví Dụ
 
-### Example 1: Encrypting "H" (111)
+### Ví Dụ 1: Mã Hóa "H" (111)
 
-**Input**:
-- Plaintext: "H" (binary: "111")
-- Key: "10010101001110100110000"
+**Đầu vào**:
+- Plaintext: "H" (nhị phân: "111")
+- Khóa: "10010101001110100110000"
 
-**Process**:
-1. Split key: X="100101", Y="01001110", Z="100110000"
-2. Step 0: x2=0, y7=0, z8=1 → maj(0,0,1)=0 → rotate X,Y
-3. Step 1: x2=1, y7=0, z8=1 → maj(1,0,1)=1 → rotate X,Z
-4. Step 2: x2=1, y7=0, z8=0 → maj(1,0,0)=0 → rotate Y,Z
-5. Generate keystream: "100"
-6. Result: "111" ⊕ "100" = "011" (D)
+**Quá trình**:
+1. Chia khóa: X="100101", Y="01001110", Z="100110000"
+2. Bước 0: x2=0, y7=0, z8=1 → maj(0,0,1)=0 → xoay X,Y
+3. Bước 1: x2=1, y7=0, z8=1 → maj(1,0,1)=1 → xoay X,Z
+4. Bước 2: x2=1, y7=0, z8=0 → maj(1,0,0)=0 → xoay Y,Z
+5. Tạo keystream: "100"
+6. Kết quả: "111" ⊕ "100" = "011" (D)
 
-### Example 2: Using CLI
+### Ví Dụ 2: Sử Dụng CLI
 
 ```bash
-# Encrypt "H" with verbose output
+# Mã hóa "H" với đầu ra chi tiết
 python cli.py --encrypt --data "H" --key "10010101001110100110000" --char --verbose
 
-# Decrypt the result
+# Giải mã kết quả
 python cli.py --decrypt --data "D" --key "10010101001110100110000" --char --verbose
 ```
 
-## File Structure
+## Cấu Trúc Tệp
 
 ```
 TinyA51/
-├── tinya51.py          # Core algorithm implementation
-├── cli.py              # Command-line interface
-├── app.py              # Flask web server
-├── requirements.txt    # Python dependencies
-├── README.md           # This file
+├── tinya51.py          # Triển khai thuật toán cốt lõi
+├── cli.py              # Giao diện dòng lệnh
+├── app.py              # Máy chủ web Flask
+├── requirements.txt    # Phụ thuộc Python
+├── README.md           # Tệp này
 ├── templates/
-│   └── index.html      # Web interface HTML
+│   └── index.html      # HTML giao diện web
 └── static/
-    ├── style.css       # Web interface styles
-    └── app.js          # Web interface JavaScript
+    ├── style.css       # Kiểu giao diện web
+    └── app.js          # JavaScript giao diện web
 ```
 
 ## API Endpoints
 
-The Flask backend provides these REST API endpoints:
+Backend Flask cung cấp các REST API endpoints sau:
 
-- `POST /api/encrypt` - Encrypt plaintext
-- `POST /api/decrypt` - Decrypt ciphertext
-- `POST /api/validate` - Validate input data
-- `POST /api/convert` - Convert between binary and character formats
+- `POST /api/encrypt` - Mã hóa plaintext
+- `POST /api/decrypt` - Giải mã ciphertext
+- `POST /api/validate` - Kiểm tra dữ liệu đầu vào
+- `POST /api/convert` - Chuyển đổi giữa định dạng nhị phân và ký tự
 
-## Troubleshooting
+## Khắc Phục Sự Cố
 
-### Common Issues
+### Các Vấn Đề Thường Gặp
 
-1. **"Key must be exactly 23 bits"**
-   - Ensure your key is exactly 23 characters long
-   - Use only 0s and 1s
+1. **"Khóa phải chính xác 23 bit"**
+   - Đảm bảo khóa của bạn có chính xác 23 ký tự
+   - Chỉ sử dụng 0 và 1
 
-2. **"Data must contain only 0s and 1s"**
-   - For binary mode, use only 0s and 1s
-   - For character mode, use only A-H
+2. **"Dữ liệu chỉ được chứa 0 và 1"**
+   - Đối với chế độ nhị phân, chỉ sử dụng 0 và 1
+   - Đối với chế độ ký tự, chỉ sử dụng A-H
 
-3. **Web interface not loading**
-   - Ensure Flask server is running (`python app.py`)
-   - Check that port 5000 is available
-   - Try `http://127.0.0.1:5000` instead of localhost
+3. **Giao diện web không tải**
+   - Đảm bảo máy chủ Flask đang chạy (`python app.py`)
+   - Kiểm tra xem cổng 5000 có sẵn không
+   - Thử `http://127.0.0.1:5000` thay vì localhost
 
-4. **"Module not found" errors**
-   - Install dependencies: `pip install flask flask-cors`
-   - Ensure you're in the correct directory
+4. **Lỗi "Module not found"**
+   - Cài đặt các phụ thuộc: `pip install flask flask-cors`
+   - Đảm bảo bạn đang ở đúng thư mục
 
-### Getting Help
+### Nhận Trợ Giúp
 
-- Check the console output for error messages
-- Use `--verbose` flag in CLI for detailed step information
-- Web interface shows validation errors in real-time
+- Kiểm tra đầu ra console cho các thông báo lỗi
+- Sử dụng cờ `--verbose` trong CLI để có thông tin bước chi tiết
+- Giao diện web hiển thị lỗi kiểm tra theo thời gian thực
 
-## Educational Value
+## Giá Trị Giáo Dục
 
-This tool is designed for educational purposes to help understand:
+Công cụ này được thiết kế cho mục đích giáo dục để giúp hiểu:
 
-- Stream cipher operation
-- Register-based keystream generation
-- Majority function logic
-- XOR-based encryption
-- Step-by-step algorithm execution
+- Hoạt động stream cipher
+- Tạo keystream dựa trên thanh ghi
+- Logic hàm đa số
+- Mã hóa dựa trên XOR
+- Thực thi thuật toán từng bước
 
-Perfect for cryptography students, security professionals, and anyone interested in understanding how stream ciphers work.
+Hoàn hảo cho sinh viên mật mã học, chuyên gia bảo mật và bất kỳ ai quan tâm đến việc hiểu cách stream cipher hoạt động.
 
-## License
+## Giấy Phép
 
-This project is for educational purposes. Feel free to use and modify for learning about cryptography.
+Dự án này dành cho mục đích giáo dục. Hãy tự do sử dụng và sửa đổi để học về mật mã học.
