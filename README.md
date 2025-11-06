@@ -5,10 +5,10 @@ Bài tập nhóm môn An toàn bảo mật thông tin
 ## Tính Năng
 
 - **Giao Diện Web**: Hiển thị tương tác với các thao tác thanh ghi từng bước
-- **Công Cụ CLI**: Mã hóa/giải mã dựa trên terminal với chế độ chi tiết
+- **Công Cụ CLI**: Mã hóa/giải mã dựa trên terminal
 - **Hỗ Trợ Đầu Vào Kép**: Chuỗi nhị phân hoặc đầu vào ký tự (A-H)
 - **Hiển Thị Thời Gian Thực**: Xem các thanh ghi xoay và tạo keystream
-- **Tập Trung Giáo Dục**: Hiển thị rõ ràng các thành phần bên trong của thuật toán
+- **Visualizer**: Hiển thị rõ ràng các thành phần bên trong của thuật toán
 
 ## Cài Đặt
 
@@ -46,8 +46,8 @@ Bài tập nhóm môn An toàn bảo mật thông tin
    - **Hiển thị từng bước**: Xem thuật toán thực thi từng bước
 
 3. **Nhập Dữ Liệu**:
-   - **Plaintext/Ciphertext**: Dữ liệu của bạn để mã hóa/giải mã
-   - **Khóa**: Chính xác 23 bit (ví dụ: "10010101001110100110000")
+   - **Plaintext/Ciphertext**: Dữ liệu để mã hóa/giải mã
+   - **Khóa**: 23 bit (ví dụ: "10010101001110100110000")
 
 4. **Điều Khiển Hiển Thị** (ở chế độ từng bước):
    - **Trước/Tiếp**: Điều hướng qua các bước thủ công
@@ -116,8 +116,8 @@ Hệ thống hỗ trợ đầu vào ký tự sử dụng mapping:
 
 1. **Khởi tạo**: Tải khóa 23-bit vào các thanh ghi X, Y, Z
 2. **Cho mỗi bit**:
-   - Đọc các bit điều khiển: x2, y7, z8
-   - Tính đa số: maj(x2, y7, z8)
+   - Đọc các bit điều khiển: x1, y3, z3
+   - Tính đa số: maj(x1, y3, z3)
    - Xoay các thanh ghi nơi bit điều khiển bằng đa số
    - Tạo bit keystream: s = x5 ⊕ y7 ⊕ z8
    - XOR với bit dữ liệu: cipher_bit = data_bit ⊕ s
@@ -132,9 +132,9 @@ Hệ thống hỗ trợ đầu vào ký tự sử dụng mapping:
 
 **Quá trình**:
 1. Chia khóa: X="100101", Y="01001110", Z="100110000"
-2. Bước 0: x2=0, y7=0, z8=1 → maj(0,0,1)=0 → xoay X,Y
-3. Bước 1: x2=1, y7=0, z8=1 → maj(1,0,1)=1 → xoay X,Z
-4. Bước 2: x2=1, y7=0, z8=0 → maj(1,0,0)=0 → xoay Y,Z
+2. Bước 0: x1=0, y3=0, z3=1 → maj(0,0,1)=0 → xoay X,Y
+3. Bước 1: x1=1, y3=0, z3=1 → maj(1,0,1)=1 → xoay X,Z
+4. Bước 2: x1=1, y3=0, z3=0 → maj(1,0,0)=0 → xoay Y,Z
 5. Tạo keystream: "100"
 6. Kết quả: "111" ⊕ "100" = "011" (D)
 
@@ -164,15 +164,6 @@ TinyA51/
     └── app.js          # JavaScript giao diện web
 ```
 
-## API Endpoints
-
-Backend Flask cung cấp các REST API endpoints sau:
-
-- `POST /api/encrypt` - Mã hóa plaintext
-- `POST /api/decrypt` - Giải mã ciphertext
-- `POST /api/validate` - Kiểm tra dữ liệu đầu vào
-- `POST /api/convert` - Chuyển đổi giữa định dạng nhị phân và ký tự
-
 ## Khắc Phục Sự Cố
 
 ### Các Vấn Đề Thường Gặp
@@ -193,25 +184,3 @@ Backend Flask cung cấp các REST API endpoints sau:
 4. **Lỗi "Module not found"**
    - Cài đặt các phụ thuộc: `pip install flask flask-cors`
    - Đảm bảo bạn đang ở đúng thư mục
-
-### Nhận Trợ Giúp
-
-- Kiểm tra đầu ra console cho các thông báo lỗi
-- Sử dụng cờ `--verbose` trong CLI để có thông tin bước chi tiết
-- Giao diện web hiển thị lỗi kiểm tra theo thời gian thực
-
-## Giá Trị Giáo Dục
-
-Công cụ này được thiết kế cho mục đích giáo dục để giúp hiểu:
-
-- Hoạt động stream cipher
-- Tạo keystream dựa trên thanh ghi
-- Logic hàm đa số
-- Mã hóa dựa trên XOR
-- Thực thi thuật toán từng bước
-
-Hoàn hảo cho sinh viên mật mã học, chuyên gia bảo mật và bất kỳ ai quan tâm đến việc hiểu cách stream cipher hoạt động.
-
-## Giấy Phép
-
-Dự án này dành cho mục đích giáo dục. Hãy tự do sử dụng và sửa đổi để học về mật mã học.
