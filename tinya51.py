@@ -1,103 +1,103 @@
 """
-TinyA5/1 Stream Cipher Implementation
-Based on the algorithm described in the ATBMTT document.
+Triển khai mã dòng TinyA5/1
 
-This module implements the TinyA5/1 algorithm with:
-- 3 registers: X (6 bits), Y (8 bits), Z (9 bits)
-- 23-bit key
-- Majority function for conditional register rotation
-- Step-by-step execution tracking for visualization
+
+Mô-đun này hiện thực thuật toán TinyA5/1 với:
+- 3 thanh ghi: X (6 bit), Y (8 bit), Z (9 bit)
+- Khóa 23 bit
+- Hàm đa số để xoay thanh ghi có điều kiện
+- Theo dõi thực thi từng bước để trực quan hóa
 """
 
 class TinyA51:
     def __init__(self, key):
         """
-        Initialize TinyA5/1 with a 23-bit key.
+        Khởi tạo TinyA5/1 với khóa 23 bit.
         
         Args:
-            key (str): 23-bit binary string
+            key (str): Chuỗi nhị phân 23 bit
         """
         if len(key) != 23:
-            raise ValueError("Key must be exactly 23 bits")
+            raise ValueError("Khóa phải dài chính xác 23 bit")
         if not all(c in '01' for c in key):
-            raise ValueError("Key must contain only 0s and 1s")
+            raise ValueError("Khóa chỉ được chứa các ký tự 0 và 1")
         
         self.key = key
         self.reset()
     
     def reset(self):
-        """Reset registers to initial state based on key."""
-        # Split 23-bit key into registers
-        # X: 6 bits, Y: 8 bits, Z: 9 bits
+        """Đặt lại các thanh ghi về trạng thái ban đầu dựa trên khóa."""
+        # Chia khóa 23 bit vào các thanh ghi
+        # X: 6 bit, Y: 8 bit, Z: 9 bit
         self.X = list(self.key[:6])    # x0, x1, ..., x5
         self.Y = list(self.key[6:14])  # y0, y1, ..., y7
         self.Z = list(self.key[14:23]) # z0, z1, ..., z8
         
-        # Convert to integers for easier manipulation
+        # Chuyển thành số nguyên để thao tác dễ hơn
         self.X = [int(bit) for bit in self.X]
         self.Y = [int(bit) for bit in self.Y]
         self.Z = [int(bit) for bit in self.Z]
     
     def majority(self, x1, y3, z3):
         """
-        Calculate majority function: maj(x1, y3, z3)
-        Returns 1 if 2 or more bits are 1, otherwise 0.
-        Note: Notation uses 1-indexed (x1, y3, z3) but we use 0-indexed arrays (x[1], y[3], z[3])
+        Tính hàm đa số: maj(x1, y3, z3)
+        Trả về 1 nếu có ít nhất 2 bit bằng 1, ngược lại trả về 0.
+        Lưu ý: Ký hiệu dùng chỉ số bắt đầu từ 1 (x1, y3, z3) nhưng mảng trong mã dùng chỉ số bắt đầu từ 0 (x[1], y[3], z[3])
         """
         return 1 if (x1 + y3 + z3) >= 2 else 0
     
     def rotate_X(self):
-        """Rotate register X: t = x2 ⊕ x4 ⊕ x5 (1-indexed: indices 2,4,5 in 0-indexed), then shift right and set x0 = t"""
-        # In 1-indexed: x2, x4, x5 = indices 2, 4, 5 in 0-indexed
+        """Xoay thanh ghi X: t = x2 ⊕ x4 ⊕ x5 (chỉ số theo 1: 2,4,5; theo 0: 2,4,5), sau đó dịch phải và đặt x0 = t"""
+        # Theo chỉ số bắt đầu từ 1: x2, x4, x5 = theo 0: 2, 4, 5
         t = self.X[2] ^ self.X[4] ^ self.X[5]
-        # Shift right: x5 = x4, x4 = x3, ..., x1 = x0
+        # Dịch phải: x5 = x4, x4 = x3, ..., x1 = x0
         for i in range(5, 0, -1):
             self.X[i] = self.X[i-1]
         self.X[0] = t
     
     def rotate_Y(self):
-        """Rotate register Y: t = y6 ⊕ y7, then shift right and set y0 = t"""
+        """Xoay thanh ghi Y: t = y6 ⊕ y7, sau đó dịch phải và đặt y0 = t"""
         t = self.Y[6] ^ self.Y[7]
-        # Shift right: y7 = y6, y6 = y5, ..., y1 = y0
+        # Dịch phải: y7 = y6, y6 = y5, ..., y1 = y0
         for i in range(7, 0, -1):
             self.Y[i] = self.Y[i-1]
         self.Y[0] = t
     
     def rotate_Z(self):
         """
-        Rotate register Z: t = z2 ⊕ z7 ⊕ z8 (1-indexed: indices 2,7,8 in 0-indexed), then shift right and set z0 = t
-        Note: Based on the ATBMTT document, the feedback taps are z2, z7, z8
+        Xoay thanh ghi Z: t = z2 ⊕ z7 ⊕ z8 (chỉ số theo 1: 2,7,8; theo 0: 2,7,8), sau đó dịch phải và đặt z0 = t
+        Lưu ý: Theo tài liệu ATBMTT, các điểm hồi tiếp là z2, z7, z8
         """
-        # In 1-indexed: z2, z7, z8 = indices 2, 7, 8 in 0-indexed
+        # Theo chỉ số bắt đầu từ 1: z2, z7, z8 = theo 0: 2, 7, 8
         t = self.Z[2] ^ self.Z[7] ^ self.Z[8]
-        # Shift right: z8 = z7, z7 = z6, ..., z1 = z0
+        # Dịch phải: z8 = z7, z7 = z6, ..., z1 = z0
         for i in range(8, 0, -1):
             self.Z[i] = self.Z[i-1]
         self.Z[0] = t
     
     def generate_bit(self, step_info=None):
         """
-        Generate one bit of keystream.
+        Sinh ra một bit của keystream.
         
         Args:
-            step_info (dict): Optional dict to store step information for visualization
+            step_info (dict): Từ điển tùy chọn để lưu thông tin từng bước nhằm trực quan hóa
             
         Returns:
-            int: Generated keystream bit
+            int: Bit keystream được sinh ra
         """
-        # Get control bits (1-indexed: x1, y3, z3 = 0-indexed: x[1], y[3], z[3])
-        # Note: In the document, notation uses 1-indexed but we use 0-indexed arrays
+        # Lấy các bit điều khiển (chỉ số theo 1: x1, y3, z3 = theo 0: x[1], y[3], z[3])
+        # Lưu ý: Trong tài liệu, ký hiệu dùng chỉ số bắt đầu từ 1, còn ở đây dùng mảng bắt đầu từ 0
         x1, y3, z3 = self.X[1], self.Y[3], self.Z[3]
         
-        # Calculate majority
+        # Tính hàm đa số
         m = self.majority(x1, y3, z3)
         
-        # Determine which registers to rotate
+        # Xác định các thanh ghi cần xoay
         rotate_X = (x1 == m)
         rotate_Y = (y3 == m)
         rotate_Z = (z3 == m)
         
-        # Store step information if requested
+        # Lưu thông tin bước nếu được yêu cầu
         if step_info is not None:
             step_info.update({
                 'x1': x1, 'y3': y3, 'z3': z3,
@@ -110,7 +110,7 @@ class TinyA51:
                 'Z_before': self.Z.copy()
             })
         
-        # Rotate registers based on majority function
+        # Xoay các thanh ghi dựa vào hàm đa số
         if rotate_X:
             self.rotate_X()
         if rotate_Y:
@@ -118,11 +118,11 @@ class TinyA51:
         if rotate_Z:
             self.rotate_Z()
         
-        # Generate keystream bit AFTER rotation: s = x5 ⊕ y7 ⊕ z8 (1-indexed) = x[5] ⊕ y[7] ⊕ z[8] (0-indexed)
-        # These are the last bits of each register after rotation
+        # Sinh bit keystream SAU khi xoay: s = x5 ⊕ y7 ⊕ z8 (chỉ số theo 1) = x[5] ⊕ y[7] ⊕ z[8] (theo 0)
+        # Đây là các bit cuối của mỗi thanh ghi sau khi xoay
         s = self.X[5] ^ self.Y[7] ^ self.Z[8]
         
-        # Store final state if requested
+        # Lưu trạng thái cuối nếu được yêu cầu
         if step_info is not None:
             step_info.update({
                 'X_after': self.X.copy(),
@@ -135,21 +135,21 @@ class TinyA51:
     
     def encrypt_decrypt(self, data, verbose=False):
         """
-        Encrypt or decrypt data using TinyA5/1.
+        Mã hóa hoặc giải mã dữ liệu bằng TinyA5/1.
         
         Args:
-            data (str): Binary string to encrypt/decrypt
-            verbose (bool): If True, return step-by-step information
+            data (str): Chuỗi nhị phân cần mã hóa/giải mã
+            verbose (bool): Nếu True, trả về thông tin chi tiết từng bước
             
         Returns:
-            dict: Result with ciphertext/plaintext and optional step details
+            dict: Kết quả gồm bản mã/bản rõ và chi tiết bước (tùy chọn)
         """
         if not all(c in '01' for c in data):
-            raise ValueError("Data must contain only 0s and 1s")
+            raise ValueError("Dữ liệu chỉ được chứa các ký tự 0 và 1")
         
         self.reset()
         
-        # Capture initial state for verbose mode
+        # Ghi lại trạng thái ban đầu cho chế độ chi tiết
         initial_state = None
         if verbose:
             initial_state = {
@@ -165,7 +165,7 @@ class TinyA51:
             step_info = {} if verbose else None
             keystream_bit = self.generate_bit(step_info)
             
-            # XOR with data bit
+            # XOR với bit dữ liệu
             cipher_bit = int(bit) ^ keystream_bit
             result.append(str(cipher_bit))
             
@@ -188,7 +188,7 @@ class TinyA51:
         return result_dict
     
     def get_register_state(self):
-        """Get current state of all registers."""
+        """Lấy trạng thái hiện tại của tất cả các thanh ghi."""
         return {
             'X': self.X.copy(),
             'Y': self.Y.copy(),
@@ -198,13 +198,13 @@ class TinyA51:
 
 def char_to_binary(text):
     """
-    Convert characters A-H to 3-bit binary representation.
+    Chuyển đổi các ký tự A-H thành biểu diễn nhị phân 3 bit.
     
     Args:
-        text (str): String containing characters A-H
+        text (str): Chuỗi chứa các ký tự A-H
         
     Returns:
-        str: Binary representation
+        str: Biểu diễn nhị phân
     """
     char_map = {
         'A': '000', 'B': '001', 'C': '010', 'D': '011',
@@ -216,23 +216,23 @@ def char_to_binary(text):
         if char in char_map:
             result.append(char_map[char])
         else:
-            raise ValueError(f"Character '{char}' not supported. Use A-H only.")
+            raise ValueError(f"Ký tự '{char}' không được hỗ trợ. Chỉ dùng A-H.")
     
     return ''.join(result)
 
 
 def binary_to_char(binary):
     """
-    Convert 3-bit binary strings to characters A-H.
+    Chuyển đổi chuỗi nhị phân 3 bit thành các ký tự A-H.
     
     Args:
-        binary (str): Binary string (length must be multiple of 3)
+        binary (str): Chuỗi nhị phân (độ dài phải là bội số của 3)
         
     Returns:
-        str: Character representation
+        str: Biểu diễn ký tự
     """
     if len(binary) % 3 != 0:
-        raise ValueError("Binary string length must be multiple of 3")
+        raise ValueError("Độ dài chuỗi nhị phân phải là bội số của 3")
     
     char_map = {
         '000': 'A', '001': 'B', '010': 'C', '011': 'D',
@@ -245,54 +245,54 @@ def binary_to_char(binary):
         if chunk in char_map:
             result.append(char_map[chunk])
         else:
-            raise ValueError(f"Invalid binary chunk '{chunk}'")
+            raise ValueError(f"Nhóm nhị phân không hợp lệ '{chunk}'")
     
     return ''.join(result)
 
 
 def validate_key(key):
-    """Validate that key is a 23-bit binary string."""
+    """Kiểm tra khóa là chuỗi nhị phân 23 bit."""
     if len(key) != 23:
-        return False, f"Key must be exactly 23 bits, got {len(key)}"
+        return False, f"Khóa phải dài chính xác 23 bit, hiện là {len(key)}"
     if not all(c in '01' for c in key):
-        return False, "Key must contain only 0s and 1s"
-    return True, "Valid key"
+        return False, "Khóa chỉ được chứa các ký tự 0 và 1"
+    return True, "Khóa hợp lệ"
 
 
 def validate_binary_data(data):
-    """Validate that data is a binary string."""
+    """Kiểm tra dữ liệu là chuỗi nhị phân."""
     if not all(c in '01' for c in data):
-        return False, "Data must contain only 0s and 1s"
-    return True, "Valid binary data"
+        return False, "Dữ liệu chỉ được chứa các ký tự 0 và 1"
+    return True, "Dữ liệu nhị phân hợp lệ"
 
 
 def validate_char_data(data):
-    """Validate that data contains only A-H characters."""
+    """Kiểm tra dữ liệu chỉ chứa các ký tự A-H."""
     if not all(c.upper() in 'ABCDEFGH' for c in data):
-        return False, "Data must contain only characters A-H"
-    return True, "Valid character data"
+        return False, "Dữ liệu chỉ được chứa các ký tự A-H"
+    return True, "Dữ liệu ký tự hợp lệ"
 
 
 if __name__ == "__main__":
-    # Example usage
-    key = "10010101001110100110000"  # 23-bit key
-    plaintext = "111"  # Binary representation of 'H'
+    # Ví dụ sử dụng
+    key = "10010101001110100110000"  # Khóa 23 bit
+    plaintext = "111"  # Biểu diễn nhị phân của 'H'
     
     cipher = TinyA51(key)
     result = cipher.encrypt_decrypt(plaintext, verbose=True)
     
-    print(f"Plaintext: {plaintext}")
-    print(f"Key: {key}")
-    print(f"Ciphertext: {result['result']}")
-    print("\nStep-by-step execution:")
+    print(f"Bản rõ: {plaintext}")
+    print(f"Khóa: {key}")
+    print(f"Bản mã: {result['result']}")
+    print("\nThực thi từng bước:")
     
     for step in result['steps']:
-        print(f"\nStep {step['step']}:")
-        print(f"  Control bits: x1={step['x1']}, y3={step['y3']}, z3={step['z3']}")
-        print(f"  Majority: {step['majority']}")
-        print(f"  Rotate: X={step['rotate_X']}, Y={step['rotate_Y']}, Z={step['rotate_Z']}")
+        print(f"\nBước {step['step']}:")
+        print(f"  Bit điều khiển: x1={step['x1']}, y3={step['y3']}, z3={step['z3']}")
+        print(f"  Đa số: {step['majority']}")
+        print(f"  Xoay: X={step['rotate_X']}, Y={step['rotate_Y']}, Z={step['rotate_Z']}")
         print(f"  X: {step['X_before']} -> {step['X_after']}")
         print(f"  Y: {step['Y_before']} -> {step['Y_after']}")
         print(f"  Z: {step['Z_before']} -> {step['Z_after']}")
-        print(f"  Keystream bit: {step['keystream_bit']}")
-        print(f"  Data bit: {step['data_bit']}, Cipher bit: {step['cipher_bit']}")
+        print(f"  Bit keystream: {step['keystream_bit']}")
+        print(f"  Bit dữ liệu: {step['data_bit']}, Bit mã: {step['cipher_bit']}")
