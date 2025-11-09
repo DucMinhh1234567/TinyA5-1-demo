@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from tinya51 import TinyA51, char_to_binary, binary_to_char, validate_key, validate_binary_data, validate_char_data
 import json
+import os
 
 app = Flask(__name__)
 CORS(app)  # Bật CORS cho phát triển local
