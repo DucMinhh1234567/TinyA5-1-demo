@@ -1,0 +1,256 @@
+3.1 – MÃ DÒNG
+¡ Hệ mã A5/1
+Giới thiệu: 
+¡ A5/1 được dùng trong mạng điện thoại GSM, để bảo mật dữ liệu trong quá trình 
+liên lạc giữa máy tính điện thoại và trạm thu phát sóng vô tuyến
+¡ Đơn vị mã hoá của A5/1 là 1 bít. Bộ sinh số mỗi lần sẽ sinh ra hoặc bít 0 hoặc bít 
+1 để sử dụng trong phép XOR
+Þ Trong bài học giới hạn xét mô hình thu nhỏ của A5/1, gọi tắt là TinyA5/1
+38
+
+3.1 – MÃ DÒNG
+¡ Hệ mã TinyA5/1
+¡ Bộ sinh số gồm 3 thanh ghi X, Y, Z:
+¡
+X gồm 6 bít (x!, x", … , x&)
+¡
+Y gồm 8 bít (y!, y", … , y')
+¡
+Z gồm 9 bít (z!, z", … , z()
+¡ Khoá K có chiều dài 23 bít là được phân bổ vào các thanh ghi: K ⟶ XYZ
+¡ Các thanh ghi X, Y, Z được biến đổi theo các quy tắc quay
+39
+
+3.1 – MÃ DÒNG
+¡ Hệ mã TinyA5/1
+¡ Đầu vào: P, K
+¡ Nội dung thuật toán:
+¡ Đầu ra: C
+Phân bổ K vào các thanh ghi XYZ
+Tại bước sinh số thứ i, thực hiện các phép tính:
+Tính m = maj(x", y', z') là ”hàm chiếm đa số”. Nếu trong 3 bít x", y', z' có từ 
+hai bít 0 trở lên thì hàm trả về giá trị 0; Ngược lại, hàm trả về giá trị 1.
+Kiểm tra:
+Nếu x" = m thì thực hiện Quay X;
+Nếu y' = m thì thực hiện Quay Y;
+Nếu z' = m thì thực hiện Quay Z;
+Tính s& = x( ⨁ y)⨁z*
+Bản mã C = P 𝐗𝐎𝐑 S
+40
+
+3.1 – MÃ DÒNG
+¡ Hệ mã TinyA5/1
+¡ Quay X gồm các thao tác:
+¡ t = x% ⨁ x) ⨁ x&
+¡ x* = x*$" với j = 5, 4, 3, 2, 1
+¡ x! = t
+1
+0
+0
+1
+0
+1
+0
+1
+2
+3
+4
+5
+t = 0 ⨁0 ⨁1 = 1
+1
+1
+0
+0
+1
+0
+¡ Quay Y gồm các thao tác:
+¡
+t = y+ ⨁ y'
+¡
+y* = y*$" với j = 7, 6, … , 1
+¡
+y! = t
+𝐗
+0
+1
+0
+0
+1
+1
+1
+0
+0
+1
+2
+3
+4
+5
+6
+7
+t = 0 ⨁1 = 1
+𝐘
+1
+0
+1
+0
+0
+1
+1
+1
+¡ Quay Z gồm các thao tác:
+¡
+t = z% ⨁ z' ⨁ z(
+¡
+z* = z*$" với j = 8, 7, … , 1
+¡
+z! = t
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+2
+3
+4
+5
+6
+7
+8
+t = 0 ⨁0 ⨁0 = 0
+𝐙
+0
+1
+0
+0
+1
+1
+0
+0
+0
+41
+
+3.1 – MÃ DÒNG
+¡ Bài tập: Cho bản rõ P = 111 (chữ H), khoá K = 10010101001110100110000
+X
+100101
+Y
+01001110
+Z
+100110000
+¡ Bước 0: x" = 0, y' = 0, z' = 1 → m = maj(0,0,1) = 0 → quay X, quay Y  
+100101
+110010
+X
+01001110
+10100111
+Y
+100110000
+Z
+s! = 0 ⨁ 1 ⨁ 0=1
+¡ Bước 1: x" = 1, y' = 0, z' = 1 → m = maj 1,0,1 = 1 → quay X, quay Z  
+110010
+111001
+X
+100110000
+010011000
+Z
+10100111
+Y
+s" = 1 ⨁ 1 ⨁ 0=0
+Phân bổ
+¡ Hệ mã TinyA5/1
+¡ Bước 2: x" = 1, y' = 0, z' = 0 → m = maj(1,0,0) = 0 → quay Y, quay Z  
+(Còn tiếp)
+42
+
+3.1 – MÃ DÒNG
+¡ Bước 2: x" = 1, y' = 0, z' = 0 → m = maj 1,0,0 = 0 → quay Y, quay Z  
+10100111
+01010011
+Y
+010011000
+101001100
+Z
+111001
+X
+s% = 1 ⨁ 1 ⨁ 0=0
+¡ Vậy bản mã là C = 111 ⨁ 100 = 011 (chữ D)
+¡ Giải mã: P = C ⨁ S = 011 ⨁ 100 = 111 
+¡ Bài tập: Cho bản rõ P = 111 (chữ H), khoá K = 10010101001110100110000
+X
+100101
+Y
+01001110
+Z
+100110000
+Phân bổ
+¡ Hệ mã TinyA5/1
+43
+
+3.1 – MÃ DÒNG
+¡ Hệ mã A5/1 (Tổng quát)
+¡ Đặc điểm: Nguyên tắc bộ số A5/1 hoạt động giống TinyA5/1 nhưng kích thước 
+thanh ghi X, Y, Z là 19, 22 và 23 bít
+¡ Hàm maj được tính trên 3 bít: m = maj(x*, y"!, z"!)
+¡ Quay X, Y, Z với các bít như sau:
+¡ Sau khi quay bít xong thì bít sinh ra: s& = x* ⨁ y"!⨁z"!  
+¡ A5/1 được thực hiện dễ dàng bằng các thiết bị phần cứng, tốc độ nhanh
+¡ Quay X :
+¡
+t = x", ⨁ x"+ ⨁ x"', ⨁ x"(
+¡
+x* = x*$" với j = 18, 17, … , 1
+¡
+x! = t
+¡ Quay Y:
+¡
+t = y%! ⨁ y%"
+¡
+y* = y*$" với j = 21, 20, … , 1
+¡
+y! = t
+¡ Quay Z:
+¡
+t = z' ⨁ z%! ⨁ z%"⨁ z%%
+¡
+z* = z*$" với j = 22, 21, … , 1
+¡
+z! = t
+44
+
+3.1 – MÃ DÒNG
+¡ Hệ mã A5/1 (Tổng quát)
+¡ Đặc điểm: Nguyên tắc bộ số A5/1 hoạt động giống TinyA5/1 nhưng kích thước 
+thanh ghi X, Y, Z là 19, 22 và 23 bít
+¡ Hàm maj được tính trên 3 bít: m = maj(x*, y"!, z"!)
+¡ Quay X, Y, Z với các bít như sau:
+¡ Sau khi quay bít xong thì bít sinh ra: s& = x* ⨁ y"!⨁z"!  
+¡ A5/1 được thực hiện dễ dàng bằng các thiết bị phần cứng, tốc độ nhanh
+¡ Quay X :
+¡
+t = x", ⨁ x"+ ⨁ x"', ⨁ x"(
+¡
+x* = x*$" với j = 18, 17, … , 1
+¡
+x! = t
+¡ Quay Y:
+¡
+t = y%! ⨁ y%"
+¡
+y* = y*$" với j = 21, 20, … , 1
+¡
+y! = t
+¡ Quay Z:
+¡
+t = z' ⨁ z%! ⨁ z%"⨁ z%%
+¡
+z* = z*$" với j = 22, 21, … , 1
+¡
+z! = t
+45

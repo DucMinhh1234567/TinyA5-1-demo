@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from tinya51 import TinyA51, char_to_binary, binary_to_char, validate_key, validate_binary_data, validate_char_data
@@ -248,7 +249,9 @@ def internal_error(error):
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     print("Đang khởi động TinyA5/1 Web Visualizer...")
-    print("Mở trình duyệt và truy cập: http://localhost:5000")
+    print(f"Mở trình duyệt và truy cập: http://0.0.0.0:{port}")
     print("Nhấn Ctrl+C để dừng máy chủ")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=debug, host='0.0.0.0', port=port)
