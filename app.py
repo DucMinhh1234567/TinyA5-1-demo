@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from tinya51 import TinyA51, char_to_binary, binary_to_char, validate_key, validate_binary_data, validate_char_data
 import json
@@ -6,6 +6,13 @@ import os
 
 app = Flask(__name__)
 CORS(app)  # Bật CORS cho phát triển local
+
+
+# Route để serve static files cho Vercel
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """Serve static files cho Vercel."""
+    return send_from_directory('static', filename)
 
 
 @app.route('/')
