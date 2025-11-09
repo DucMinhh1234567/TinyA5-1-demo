@@ -1,20 +1,28 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
-  ]
-}
-
+    "version": 2,
+    "builds": [
+      {
+        "src": "app.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/static/(.*)",
+        "headers": {
+          "cache-control": "public, max-age=31536000, immutable"
+        },
+        "dest": "/static/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "app.py"
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/static/(.*)",
+        "destination": "/static/$1"
+      }
+    ]
+  }
