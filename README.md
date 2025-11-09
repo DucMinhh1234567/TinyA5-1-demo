@@ -1,6 +1,7 @@
 # TinyA5/1 Stream Cipher Visualizer
 
 Bài tập nhóm môn An toàn bảo mật thông tin
+Web demo: https://tinya5-1-demo-1.onrender.com/
 
 ## Tính Năng
 
@@ -184,3 +185,4 @@ TinyA51/
 4. **Lỗi "Module not found"**
    - Cài đặt các phụ thuộc: `pip install flask flask-cors`
    - Đảm bảo bạn đang ở đúng thư mục
+
